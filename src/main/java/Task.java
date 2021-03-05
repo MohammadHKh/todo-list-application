@@ -1,15 +1,15 @@
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 public class Task implements Serializable {
     private String title;
     private String projectName;
     private String status;
-    private LocalDate dueDate;
+    private Date dueDate;
 
 
-    public Task(String title, String projectName, String status, LocalDate dueDate) {
+    public Task(String title, String projectName, String status, Date dueDate) {
         this.title = title;
         this.projectName = projectName;
         this.status = status;
@@ -32,11 +32,11 @@ public class Task implements Serializable {
         this.projectName = projectName;
     }
 
-    public LocalDate getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDate dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -69,7 +69,7 @@ public class Task implements Serializable {
         return "{\n" +
                 "  title=" + title + "\n" +
                 "  projectName=" + projectName + "\n" +
-                "  status=" + status +"\n"+
+                "  status=" + status.toUpperCase() +"\n"+
                 "  dueDate=" + dueDate +"\n"+
                 '}';
     }

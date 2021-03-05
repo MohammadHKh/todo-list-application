@@ -1,6 +1,9 @@
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
@@ -20,6 +23,7 @@ public class ToDoList {
                 "3- Edit Task\n" +
                 "4- Load Tasks From File\n" +
                 "5- Save and Exit\n" +
+                "6- Exit Without Save\n"+
                 "---------------------";
 
         System.out.println(menu);
@@ -48,6 +52,8 @@ public class ToDoList {
                 case 5:
                     saveToFileAsObject();
                     break;
+                default:
+                    exit=true;
             }
         }
         System.exit(0);
@@ -62,22 +68,44 @@ public class ToDoList {
     }
 
     public void addTask() {
+        Date dueDate = null;
+        String taskTilte=null;
+        String taskProjectTitle=null;
+
         Scanner input = new Scanner(System.in);
         System.out.println("Enter new Task:");
 
         System.out.println("Enter The Task Title:");
-        String taskTilte = input.nextLine();
+        taskTilte = input.nextLine();
+        if (taskTilte.isBlank() || taskTilte.isEmpty()){
+            System.out.println("Error: Task Title Can Not Be Null");
+            return;
+        }
 
         System.out.println("Enter The Task Due Date In The Format YYYY-MM-DD:");
         String taskDueDate = input.nextLine();
+        try {
+            dueDate = new SimpleDateFormat("yyyy-mm-dd").parse(taskDueDate);
+        } catch (ParseException e) {
+            System.out.println("Error: Please Enter Date in Correct Format: YYYY-MM-DD");
+            return;
+        }
 
-        System.out.println("Enter The Task Status In The Format DONE or InProgress :");
+        System.out.println("Enter The Task Status In The Correct Format: DONE or InProgress (Case Insensitive) :");
         String taskStatus = input.nextLine();
+        if (!taskStatus.equalsIgnoreCase("DONE") && !taskStatus.equalsIgnoreCase("InProgress")){
+            System.out.println("Error: Please Enter The Task Status In The Correct Format (Case Insensitive): DONE or InProgress :");
+            return;
+        }
 
         System.out.println("Enter Project Title:");
-        String taskProjectTitle = input.nextLine();
+        taskProjectTitle = input.nextLine();
+        if (taskProjectTitle.isBlank() || taskDueDate.isEmpty()){
+            System.out.println("Error: Project Title Can Not Be Null");
+            return;
+        }
 
-        tasklist.add(new Task(taskTilte, taskProjectTitle, taskStatus, LocalDate.parse(taskDueDate)));
+        tasklist.add(new Task(taskTilte, taskProjectTitle, taskStatus, dueDate));
     }
 
 
@@ -86,8 +114,11 @@ public class ToDoList {
         System.out.println("Please Enter Task Number:");
         Scanner input = new Scanner(System.in);
         int taskNumber = input.nextInt();
-        if (taskNumber < 0 || taskNumber > tasklist.size() - 1)
-            throw new IndexOutOfBoundsException("Please Enter Valid Task Number, There is no task-" + taskNumber);
+        if (taskNumber < 0 || taskNumber > tasklist.size() - 1){
+            System.out.println("Error, Please Enter Valid Task Number, There is no task-" + taskNumber);
+            return;
+        }
+         //   throw new IndexOutOfBoundsException("Please Enter Valid Task Number, There is no task-" + taskNumber);
 
         System.out.println("Please Enter 1- Update  2-Mark As Down  3-Remove");
         Scanner userInput = new Scanner(System.in);
@@ -111,20 +142,25 @@ public class ToDoList {
     }
 
     private void markAsDown(int taskNumber) {
+        String taskStatus=null;
         Task task = tasklist.get(taskNumber);
-        System.out.println("Enter Task Status In The Format DONE or InProgress :");
+        System.out.println("Enter Task Status In The Format DONE or InProgress (Case Insensitive) :");
         Scanner input = new Scanner(System.in);
-        String taskStatus = input.nextLine();
-        boolean isUpdated = false;
+        taskStatus = input.nextLine();
 
-        if (taskStatus != null) {
+
+
+        if (taskStatus.equalsIgnoreCase("DONE") || taskStatus.equalsIgnoreCase("InProgress")){
             task.setStatus(taskStatus);
-            isUpdated = true;
+            System.out.println(("Task Updated successfully"));
+            return;
         }
-        System.out.println(("Task is" + (isUpdated ? "Task Updated successfully" : "Task Is Not Modified")));
+        System.out.println("Task Is Not Modified");
     }
 
     private void updateTask(int taskNumber) {
+        Date dueDate=null;
+        String stringDate=null;
         Task task = tasklist.get(taskNumber);
         System.out.println("Enter the details");
 
@@ -133,26 +169,31 @@ public class ToDoList {
         String title = input.nextLine();
         boolean isUpdated = false;
 
-        if (title != null) {
+        if (!title.isBlank() && !title.isEmpty()) {
             task.setTitle(title);
             isUpdated = true;
         }
 
-        System.out.println("Enter Task Project Tile");
+        System.out.println("Enter Task Project Title:");
         String projectTitle = input.nextLine();
-        if (projectTitle != null) {
+        if (!projectTitle.isBlank() && !projectTitle.isEmpty()) {
             task.setProjectName(projectTitle);
             isUpdated = true;
         }
 
         System.out.println("Enter The Task Due Date In The Format YYYY-MM-DD:");
-        String dueDate = input.nextLine();
-        if (dueDate != null) {
-            task.setDueDate(LocalDate.parse(dueDate));
-            isUpdated = true;
-        }
+        stringDate = input.nextLine();
+        if (!stringDate.isEmpty() && !stringDate.isBlank())
+            try {
+                dueDate = new SimpleDateFormat("yyyy-mm-dd").parse(stringDate);
+                task.setDueDate(dueDate);
+                isUpdated = true;
+            } catch (ParseException e) {
+                System.out.println("Error: Please Enter Date in Correct Format: YYYY-MM-DD ");
+                return;
+            }
 
-        System.out.println(("Task is" + (isUpdated ? "Task Updated Successfully" : "Task Is Not Modified")));
+        System.out.println(("Task" + (isUpdated ? "Updated Successfully" : "Is Not Modified")));
     }
 
     private void saveToFileAsObject() {
@@ -177,6 +218,7 @@ public class ToDoList {
             tasklist = (ArrayList<Task>) reader.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
+            System.out.println("There Is No File");
             e.printStackTrace();
         }
         return tasklist;
