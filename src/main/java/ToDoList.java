@@ -1,3 +1,4 @@
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,16 +14,19 @@ public class ToDoList {
     }
 
     private static void printMenu() {
-        String menu = "Please pick an option\n" +
-                      "1- Show Task list\n" +
-                      "2- Add New Task\n" +
-                      "3- Edit Task\n" +
-                      "4- Save and Exit\n";
+        String menu = "\nPlease pick an option\n" +
+                "1- Show Task list\n" +
+                "2- Add New Task\n" +
+                "3- Edit Task\n" +
+                "4- Load Tasks From File\n" +
+                "5- Save and Exit\n" +
+                "---------------------";
+
         System.out.println(menu);
     }
 
     public void runTerminal() {
-        System.out.println("Welcome to Todo List Application\n");
+        System.out.println("Welcome to Todo List Application");
         while (!exit) {
 
             Scanner input = new Scanner(System.in);
@@ -39,7 +43,10 @@ public class ToDoList {
                     editTask();
                     break;
                 case 4:
-                    saveToFile();
+                    tasklist = readFromFileAsObject();
+                    break;
+                case 5:
+                    saveToFileAsObject();
                     break;
             }
         }
@@ -100,7 +107,7 @@ public class ToDoList {
 
     private void removeTask(int taskNumber) {
         tasklist.remove(taskNumber);
-        System.out.println(("Task-"+ taskNumber+ "Successfully Removed"));
+        System.out.println(("Task-" + taskNumber + "Successfully Removed"));
     }
 
     private void markAsDown(int taskNumber) {
@@ -124,32 +131,55 @@ public class ToDoList {
         System.out.println("Enter Task Title:");
         Scanner input = new Scanner(System.in);
         String title = input.nextLine();
-        boolean isUpdated=false;
+        boolean isUpdated = false;
 
-        if (title!=null){
+        if (title != null) {
             task.setTitle(title);
             isUpdated = true;
         }
 
         System.out.println("Enter Task Project Tile");
         String projectTitle = input.nextLine();
-        if (projectTitle!=null){
+        if (projectTitle != null) {
             task.setProjectName(projectTitle);
             isUpdated = true;
         }
 
         System.out.println("Enter The Task Due Date In The Format YYYY-MM-DD:");
         String dueDate = input.nextLine();
-        if (dueDate!=null){
+        if (dueDate != null) {
             task.setDueDate(LocalDate.parse(dueDate));
             isUpdated = true;
         }
 
-        System.out.println(("Task is"+ (isUpdated ? "Task Updated Successfully":"Task Is Not Modified")));
+        System.out.println(("Task is" + (isUpdated ? "Task Updated Successfully" : "Task Is Not Modified")));
     }
 
-    private void saveToFile() {
+    private void saveToFileAsObject() {
+        try {
+            File file = new File("C:\\Users\\Mohammad\\Downloads\\todo-list-application\\src\\main\\java\\Data\\File.txt");
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            ObjectOutputStream writer = new ObjectOutputStream(fileOutputStream);
+            writer.writeObject(tasklist);
+            writer.close();
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         exit = true;
+    }
+
+    public ArrayList<Task> readFromFileAsObject() {
+
+        try (ObjectInputStream reader = new ObjectInputStream(
+                new FileInputStream(
+                        new File("C:\\Users\\Mohammad\\Downloads\\todo-list-application\\src\\main\\java\\Data\\File.txt")))) {
+            tasklist = (ArrayList<Task>) reader.readObject();
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return tasklist;
     }
 
 }
