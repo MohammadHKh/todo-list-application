@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class UserCommand {
-     ArrayList<Task> tasklist;
-     abstract void sortTaskByProject();
-     abstract void sortTaskByDueDate();
-     abstract void displayTask(List<Task> list);
-     abstract void addTask();
-     abstract void editTask();
-     abstract void saveToFileAsObject();
-     abstract ArrayList<Task> readFromFileAsObject();
+     protected ArrayList<Task> taskList;
+     public abstract void sortTaskByProject();
+     public abstract void sortTaskByDueDate();
+     public abstract void displayTask(List<Task> list);
+     public abstract void addTask();
+     public abstract void editTask();
+     public abstract void saveToFileAsObject();
+     public abstract ArrayList<Task> readFromFileAsObject();
 }
