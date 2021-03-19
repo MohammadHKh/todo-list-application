@@ -1,3 +1,8 @@
+package model;
+
+import utility.Messages;
+import utility.Validation;
+
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -5,68 +10,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class ToDoList {
-    int choice;
-    private boolean exit;
-    private ArrayList<Task> tasklist;
+public class ToDoList extends UserCommand {
 
     public ToDoList() {
         tasklist = new ArrayList<>();
     }
 
-    private static void printMenu() {
-        String menu = "\nPlease pick an option\n" +
-                "1- Show Task list\n" +
-                "2- Add New Task\n" +
-                "3- Edit Task\n" +
-                "4- Load Tasks From File\n" +
-                "5- Display Tasks Sorted by Due Date\n" +
-                "6- Display Tasks Sorted by Project\n" +
-                "7- Save and Exit\n" +
-                "8- Exit Without Save\n" +
-                "---------------------";
-
-        System.out.println(menu);
-    }
-
-    public void runTerminal() {
-        System.out.println("Welcome to Todo List Application");
-        while (!exit) {
-
-            Scanner input = new Scanner(System.in);
-            printMenu();
-            choice = input.nextInt();
-            switch (choice) {
-                case 1:
-                    displayTask(tasklist);
-                    break;
-                case 2:
-                    addTask();
-                    break;
-                case 3:
-                    editTask();
-                    break;
-                case 4:
-                    tasklist = readFromFileAsObject();
-                    break;
-                case 5:
-                    sortTaskByDueDate();
-                    break;
-                case 6:
-                    sortTaskByProject();
-                    break;
-                case 7:
-                    saveToFileAsObject();
-                    break;
-                default:
-                    exit=true;
-            }
-        }
-        System.exit(0);
-
-    }
-
-    private void sortTaskByDueDate() {
+    public void sortTaskByDueDate() {
         try {
             Validation.validateListSize(tasklist);
             Messages.sortingOptions();
@@ -114,8 +64,6 @@ public class ToDoList {
             System.out.println(e.getMessage());
             return;
         }
-
-
     }
 
     private void sortTaskByProjectDescending() {
@@ -128,28 +76,26 @@ public class ToDoList {
         displayTask(sortedTaskListByProjectAscending);
     }
 
-
     public void displayTask(List<Task> list) {
         try {
             Validation.validateListSize(tasklist);
             IntStream.range(0, list.size()).forEach(a -> System.out.println("Task-" + a + list.get(a)));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
     public void addTask() {
         Date dueDate = null;
-        String taskTilte=null;
-        String taskProjectTitle=null;
+        String taskTilte = null;
+        String taskProjectTitle = null;
 
         Scanner input = new Scanner(System.in);
         System.out.println("Enter new Task:");
 
         System.out.println("Enter The Task Title:");
         taskTilte = input.nextLine();
-        if (taskTilte.isBlank() || taskTilte.isEmpty()){
+        if (taskTilte.isBlank() || taskTilte.isEmpty()) {
             System.out.println("Error: Task Title Can Not Be Null");
             return;
         }
@@ -165,14 +111,14 @@ public class ToDoList {
 
         System.out.println("Enter The Task Status In The Correct Format: DONE or InProgress (Case Insensitive) :");
         String taskStatus = input.nextLine();
-        if (!taskStatus.equalsIgnoreCase("DONE") && !taskStatus.equalsIgnoreCase("InProgress")){
+        if (!taskStatus.equalsIgnoreCase("DONE") && !taskStatus.equalsIgnoreCase("InProgress")) {
             System.out.println("Error: Please Enter The Task Status In The Correct Format (Case Insensitive): DONE or InProgress :");
             return;
         }
 
         System.out.println("Enter Project Title:");
         taskProjectTitle = input.nextLine();
-        if (taskProjectTitle.isBlank() || taskDueDate.isEmpty()){
+        if (taskProjectTitle.isBlank() || taskDueDate.isEmpty()) {
             System.out.println("Error: Project Title Can Not Be Null");
             return;
         }
@@ -180,17 +126,15 @@ public class ToDoList {
         tasklist.add(new Task(taskTilte, taskProjectTitle, taskStatus, dueDate));
     }
 
-
     public void editTask() {
 
         System.out.println("Please Enter Task Number:");
         Scanner input = new Scanner(System.in);
         int taskNumber = input.nextInt();
-        if (taskNumber < 0 || taskNumber > tasklist.size() - 1){
+        if (taskNumber < 0 || taskNumber > tasklist.size() - 1) {
             System.out.println("Error, Please Enter Valid Task Number, There is no task-" + taskNumber);
             return;
         }
-        //   throw new IndexOutOfBoundsException("Please Enter Valid Task Number, There is no task-" + taskNumber);
 
         System.out.println("Please Enter 1- Update  2-Mark As Down  3-Remove");
         Scanner userInput = new Scanner(System.in);
@@ -214,15 +158,14 @@ public class ToDoList {
     }
 
     private void markAsDown(int taskNumber) {
-        String taskStatus=null;
+        String taskStatus = null;
         Task task = tasklist.get(taskNumber);
         System.out.println("Enter Task Status In The Format DONE or InProgress (Case Insensitive) :");
         Scanner input = new Scanner(System.in);
         taskStatus = input.nextLine();
 
 
-
-        if (taskStatus.equalsIgnoreCase("DONE") || taskStatus.equalsIgnoreCase("InProgress")){
+        if (taskStatus.equalsIgnoreCase("DONE") || taskStatus.equalsIgnoreCase("InProgress")) {
             task.setStatus(taskStatus);
             System.out.println(("Task Updated successfully"));
             return;
@@ -231,8 +174,8 @@ public class ToDoList {
     }
 
     private void updateTask(int taskNumber) {
-        Date dueDate=null;
-        String stringDate=null;
+        Date dueDate = null;
+        String stringDate = null;
         Task task = tasklist.get(taskNumber);
         System.out.println("Enter the details");
 
@@ -268,7 +211,7 @@ public class ToDoList {
         System.out.println(("Task" + (isUpdated ? "Updated Successfully" : "Is Not Modified")));
     }
 
-    private void saveToFileAsObject() {
+    public void saveToFileAsObject() {
         try {
             File file = new File("C:\\Users\\Mohammad\\Downloads\\todo-list-application\\src\\main\\java\\Data\\File.txt");
             FileOutputStream fileOutputStream = new FileOutputStream(file);
@@ -279,7 +222,6 @@ public class ToDoList {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        exit = true;
     }
 
     public ArrayList<Task> readFromFileAsObject() {
