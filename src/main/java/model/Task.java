@@ -38,13 +38,12 @@ public class Task implements Serializable {
      * Constructs a Task with the specified fields.
      * @param title the title of Task.
      * @param projectName the project's name of Task.
-     * @param status the status of Task.
      * @param dueDate the dead-line for accomplishing the task.
      */
-    public Task(String title, String projectName, String status, Date dueDate) {
+    public Task(String title, String projectName, Date dueDate) {
         this.title = title;
         this.projectName = projectName;
-        this.status = status;
+        this.status = "InProgress";
         this.dueDate = dueDate;
     }
 

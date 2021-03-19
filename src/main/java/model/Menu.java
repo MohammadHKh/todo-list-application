@@ -22,7 +22,7 @@ public class Menu {
             choice = input.nextInt();
             switch (choice) {
                 case 1:
-                    toDoList.displayTask(toDoList.tasklist);
+                    toDoList.displayTask(toDoList.taskList);
                     break;
                 case 2:
                     toDoList.addTask();
@@ -31,7 +31,7 @@ public class Menu {
                     toDoList.editTask();
                     break;
                 case 4:
-                    toDoList.tasklist = toDoList.readFromFileAsObject();
+                    toDoList.taskList = toDoList.readFromFileAsObject();
                     break;
                 case 5:
                     toDoList.sortTaskByDueDate();

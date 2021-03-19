@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 public class ToDoList extends UserCommand {
 
     public ToDoList() {
-        tasklist = new ArrayList<>();
+        taskList = new ArrayList<>();
     }
 
     /**
@@ -28,7 +28,7 @@ public class ToDoList extends UserCommand {
      */
     public void sortTaskByDueDate() {
         try {
-            Validation.validateListSize(tasklist);
+            Validation.validateListSize(taskList);
             Messages.sortingOptions();
             Scanner userInput = new Scanner(System.in);
             int sortType = userInput.nextInt();
@@ -50,7 +50,7 @@ public class ToDoList extends UserCommand {
      * Sorts Tasks by DueDate in descending order.
      */
     private void sortTaskByDueDateDescending() {
-        List<Task> sortedTaskListByDateDescending = tasklist.stream().sorted(Comparator.comparing(Task::getDueDate).reversed()).collect(Collectors.toList());
+        List<Task> sortedTaskListByDateDescending = taskList.stream().sorted(Comparator.comparing(Task::getDueDate).reversed()).collect(Collectors.toList());
         displayTask(sortedTaskListByDateDescending);
     }
 
@@ -58,7 +58,7 @@ public class ToDoList extends UserCommand {
      * Sorts Tasks by DueDate in ascending order.
      */
     private void sortTaskByDueDateAscending() {
-        List<Task> sortedTaskListByDateAscending = tasklist.stream().sorted(Comparator.comparing(Task::getDueDate)).collect(Collectors.toList());
+        List<Task> sortedTaskListByDateAscending = taskList.stream().sorted(Comparator.comparing(Task::getDueDate)).collect(Collectors.toList());
         displayTask(sortedTaskListByDateAscending);
     }
 
@@ -69,7 +69,7 @@ public class ToDoList extends UserCommand {
      */
     public void sortTaskByProject() {
         try {
-            Validation.validateListSize(tasklist);
+            Validation.validateListSize(taskList);
             Messages.sortingOptions();
             Scanner userInput = new Scanner(System.in);
             int sortType = userInput.nextInt();
@@ -91,7 +91,7 @@ public class ToDoList extends UserCommand {
      * Sorts Tasks by ProjectName in descending order.
      */
     private void sortTaskByProjectDescending() {
-        List<Task> sortedTaskListByProjectDescending = tasklist.stream().sorted(Comparator.comparing(Task::getProjectName).reversed()).collect(Collectors.toList());
+        List<Task> sortedTaskListByProjectDescending = taskList.stream().sorted(Comparator.comparing(Task::getProjectName).reversed()).collect(Collectors.toList());
         displayTask(sortedTaskListByProjectDescending);
     }
 
@@ -99,7 +99,7 @@ public class ToDoList extends UserCommand {
      * Sorts Tasks by ProjectName in ascending order.
      */
     private void sortTaskByProjectAscending() {
-        List<Task> sortedTaskListByProjectAscending = tasklist.stream().sorted(Comparator.comparing(Task::getProjectName)).collect(Collectors.toList());
+        List<Task> sortedTaskListByProjectAscending = taskList.stream().sorted(Comparator.comparing(Task::getProjectName)).collect(Collectors.toList());
         displayTask(sortedTaskListByProjectAscending);
     }
 
@@ -109,7 +109,7 @@ public class ToDoList extends UserCommand {
      */
     public void displayTask(List<Task> list) {
         try {
-            Validation.validateListSize(tasklist);
+            Validation.validateListSize(taskList);
             IntStream.range(0, list.size()).forEach(a -> System.out.println("Task-" + a + list.get(a)));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -133,19 +133,15 @@ public class ToDoList extends UserCommand {
         System.out.println("Enter The Task Due Date In The Format YYYY-MM-DD:");
         String taskDueDate = input.nextLine();
 
-        System.out.println("Enter The Task Status In The Correct Format: DONE or InProgress (Case Insensitive) :");
-        String taskStatus = input.nextLine();
-
         System.out.println("Enter Project Title:");
         taskProjectTitle = input.nextLine();
 
         try {
             Validation.validateStringField(taskTilte);
             Validation.validateStringField(taskProjectTitle);
-            Validation.validateTaskStatus(taskStatus);
             Validation.validateStringField(taskDueDate);
             dueDate = new SimpleDateFormat("yyyy-mm-dd").parse(taskDueDate);
-            tasklist.add(new Task(taskTilte, taskProjectTitle, taskStatus, dueDate));
+            taskList.add(new Task(taskTilte, taskProjectTitle, dueDate));
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return;
@@ -168,7 +164,7 @@ public class ToDoList extends UserCommand {
         Scanner input = new Scanner(System.in);
         int taskNumber = input.nextInt();
         try {
-            Validation.validateTaskListIndex(tasklist, taskNumber);
+            Validation.validateTaskListIndex(taskList, taskNumber);
             System.out.println("Please Enter 1- Update  2-Mark As Down  3-Remove");
             Scanner userInput = new Scanner(System.in);
             int updateType = userInput.nextInt();
@@ -193,7 +189,7 @@ public class ToDoList extends UserCommand {
      * @param taskNumber Desired Task number.
      */
     private void removeTask(int taskNumber) {
-        tasklist.remove(taskNumber);
+        taskList.remove(taskNumber);
         System.out.println(("Task-" + taskNumber + "Successfully Removed"));
     }
 
@@ -203,7 +199,7 @@ public class ToDoList extends UserCommand {
      */
     private void markAsDone(int taskNumber) {
         String taskStatus = null;
-        Task task = tasklist.get(taskNumber);
+        Task task = taskList.get(taskNumber);
         System.out.println("Enter Task Status In The Format DONE or InProgress (Case Insensitive) :");
         Scanner input = new Scanner(System.in);
         taskStatus = input.nextLine();
@@ -227,7 +223,7 @@ public class ToDoList extends UserCommand {
         String stringDate = null;
         boolean isUpdated = false;
 
-        Task task = tasklist.get(taskNumber);
+        Task task = taskList.get(taskNumber);
         System.out.println("Enter the details");
         System.out.println("Enter Task Title:");
         Scanner input = new Scanner(System.in);
@@ -265,7 +261,7 @@ public class ToDoList extends UserCommand {
             File file = new File("C:\\Users\\Mohammad\\Downloads\\todo-list-application\\src\\main\\java\\Data\\File.txt");
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             ObjectOutputStream writer = new ObjectOutputStream(fileOutputStream);
-            writer.writeObject(tasklist);
+            writer.writeObject(taskList);
             writer.close();
             fileOutputStream.close();
         } catch (IOException e) {
@@ -282,13 +278,13 @@ public class ToDoList extends UserCommand {
         try (ObjectInputStream reader = new ObjectInputStream(
                 new FileInputStream(
                         new File("C:\\Users\\Mohammad\\Downloads\\todo-list-application\\src\\main\\java\\Data\\File.txt")))) {
-            tasklist = (ArrayList<Task>) reader.readObject();
+            taskList = (ArrayList<Task>) reader.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("There Is No File");
             e.printStackTrace();
         }
-        return tasklist;
+        return taskList;
     }
 
 }
