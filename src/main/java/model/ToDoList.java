@@ -262,6 +262,7 @@ public class ToDoList extends UserCommand {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             ObjectOutputStream writer = new ObjectOutputStream(fileOutputStream);
             writer.writeObject(taskList);
+            System.out.println("File successfully saved");
             writer.close();
             fileOutputStream.close();
         } catch (IOException e) {
@@ -284,7 +285,7 @@ public class ToDoList extends UserCommand {
             System.out.println("There Is No File");
             e.printStackTrace();
         }
-        System.out.println("File Successfully loaded");
+        System.out.println("File successfully loaded");
         return taskList;
     }
 
