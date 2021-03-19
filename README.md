@@ -36,3 +36,6 @@ An example of loading tasks from file
 
 Note: To run the application from your local computer and address the file (for saving and loading tasks), you should the file address in
 saveToFileAsObject and readFromFileAsObject methods (in ToDoList.java) to your preferred address.
+
+## Class Diagram
+Open the IP-ClassDiagram.pdf file.
