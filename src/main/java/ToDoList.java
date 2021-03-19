@@ -1,10 +1,8 @@
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ToDoList {
@@ -22,8 +20,9 @@ public class ToDoList {
                 "2- Add New Task\n" +
                 "3- Edit Task\n" +
                 "4- Load Tasks From File\n" +
-                "5- Save and Exit\n" +
-                "6- Exit Without Save\n"+
+                "5- Display Tasks Sorted by Project\n" +
+                "6- Save and Exit\n" +
+                "7- Exit Without Save\n" +
                 "---------------------";
 
         System.out.println(menu);
@@ -38,7 +37,7 @@ public class ToDoList {
             choice = input.nextInt();
             switch (choice) {
                 case 1:
-                    displayTask();
+                    displayTask(tasklist);
                     break;
                 case 2:
                     addTask();
@@ -50,6 +49,9 @@ public class ToDoList {
                     tasklist = readFromFileAsObject();
                     break;
                 case 5:
+                    sortTaskByProject();
+                    break;
+                case 6:
                     saveToFileAsObject();
                     break;
                 default:
@@ -60,11 +62,47 @@ public class ToDoList {
 
     }
 
-    public void displayTask() {
-        if (tasklist.size() > 0)
-            IntStream.range(0, tasklist.size()).forEach(a -> System.out.println("Task-" + a + tasklist.get(a)));
-        else
-            System.out.println("There is no task");
+    public void sortTaskByProject() {
+        try {
+            Validation.validateListSize(tasklist);
+            Messages.sortingOptions();
+            Scanner userInput = new Scanner(System.in);
+            int sortType = userInput.nextInt();
+            switch (sortType) {
+                case 1:
+                    sortTaskByProjectAscending();
+                    break;
+                case 2:
+                    sortTaskByProjectDescending();
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+
+
+    }
+
+    private void sortTaskByProjectDescending() {
+        List<Task> sortedTaskListByProjectDescending = tasklist.stream().sorted(Comparator.comparing(Task::getProjectName).reversed()).collect(Collectors.toList());
+        displayTask(sortedTaskListByProjectDescending);
+    }
+
+    private void sortTaskByProjectAscending() {
+        List<Task> sortedTaskListByProjectAscending = tasklist.stream().sorted(Comparator.comparing(Task::getProjectName)).collect(Collectors.toList());
+        displayTask(sortedTaskListByProjectAscending);
+    }
+
+
+    public void displayTask(List<Task> list) {
+        try {
+            Validation.validateListSize(tasklist);
+            IntStream.range(0, list.size()).forEach(a -> System.out.println("Task-" + a + list.get(a)));
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     public void addTask() {
@@ -118,7 +156,7 @@ public class ToDoList {
             System.out.println("Error, Please Enter Valid Task Number, There is no task-" + taskNumber);
             return;
         }
-         //   throw new IndexOutOfBoundsException("Please Enter Valid Task Number, There is no task-" + taskNumber);
+        //   throw new IndexOutOfBoundsException("Please Enter Valid Task Number, There is no task-" + taskNumber);
 
         System.out.println("Please Enter 1- Update  2-Mark As Down  3-Remove");
         Scanner userInput = new Scanner(System.in);
