@@ -7,9 +7,16 @@ import model.Task;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+/**
+ * Test class for Validation class
+ *
+ * @author Mohammad Hossein Khezrian
+ */
 public class ValidationTest {
 
+    /**
+     *  Assert that empty list of task is not valid and should throw IndexOutOfBoundsException.
+     */
     @Test
     public void validateTaskListSizeShouldThrowIndexOutOfBoundsExceptionWithEmptyList() {
         List<Task> taskArrayList = new ArrayList<>();
@@ -19,6 +26,9 @@ public class ValidationTest {
         );
     }
 
+    /**
+     *  Assert that non-empty list of task is valid.
+     */
     @Test
     public void validateTaskListSizeShouldNotThrowExceptionWithNonEmptyList()  {
         List<Task> taskArrayList = new ArrayList<>();
@@ -28,6 +38,9 @@ public class ValidationTest {
         );
     }
 
+    /**
+     *  Assert that accessing elements out of the range of task list size is not valid and should throw IndexOutOfBoundsException.
+     */
     @Test
     public void validateTaskListIndexShouldThrowIndexOutOfBoundsExceptionWithIndexOutOfListSize() {
         List<Task> taskArrayList = new ArrayList<>();
@@ -37,6 +50,9 @@ public class ValidationTest {
         );
     }
 
+    /**
+     *  Assert that accessing elements in the range of task list size is valid and should not throw IndexOutOfBoundsException.
+     */
     @Test
     public void validateTaskListIndexShouldNotThrowExceptionWithIndexInRangeOfListSize() {
         List<Task> taskArrayList = new ArrayList<>();
@@ -48,6 +64,9 @@ public class ValidationTest {
         );
     }
 
+    /**
+     * Assert that setting the Task status with anything except "DONE" and "InProgrss" (CaseInSensitive) is not valid and should throw IllegalArgumentException
+     */
     @Test
     public void validateTaskStatusShouldThrowIllegalArgumentExceptionWithInvalidStatus() {
         String taskStatus="doneE";
@@ -57,6 +76,9 @@ public class ValidationTest {
         );
     }
 
+    /**
+     * Assert that setting the Task status with only "DONE" or "InProgress" (CaseInSensitive) is valid and should not throw IllegalArgumentException
+     */
     @Test
     public void validateTaskStatusShouldNotThrowExceptionWithValidStatus() {
         String taskStatus="inPRoGresS";
@@ -65,6 +87,9 @@ public class ValidationTest {
         );
     }
 
+    /**
+     * Assert that setting the Task fields (String) with empty values are not valid and should throw IllegalArgumentException
+     */
     @Test
     public void validateStringShouldThrowIllegalArgumentExceptionWithWhiteSpaces() {
         assertThrows(
@@ -73,6 +98,9 @@ public class ValidationTest {
         );
     }
 
+    /**
+     * Assert that setting the Task fields (String) with non-empty values is valid and should not throw IllegalArgumentException
+     */
     @Test
     public void validateStringShouldNotThrowIExceptionWithNotBlankValues() {
         assertDoesNotThrow(
