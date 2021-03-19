@@ -20,9 +20,10 @@ public class ToDoList {
                 "2- Add New Task\n" +
                 "3- Edit Task\n" +
                 "4- Load Tasks From File\n" +
-                "5- Display Tasks Sorted by Project\n" +
-                "6- Save and Exit\n" +
-                "7- Exit Without Save\n" +
+                "5- Display Tasks Sorted by Due Date\n" +
+                "6- Display Tasks Sorted by Project\n" +
+                "7- Save and Exit\n" +
+                "8- Exit Without Save\n" +
                 "---------------------";
 
         System.out.println(menu);
@@ -49,9 +50,12 @@ public class ToDoList {
                     tasklist = readFromFileAsObject();
                     break;
                 case 5:
-                    sortTaskByProject();
+                    sortTaskByDueDate();
                     break;
                 case 6:
+                    sortTaskByProject();
+                    break;
+                case 7:
                     saveToFileAsObject();
                     break;
                 default:
@@ -60,6 +64,36 @@ public class ToDoList {
         }
         System.exit(0);
 
+    }
+
+    private void sortTaskByDueDate() {
+        try {
+            Validation.validateListSize(tasklist);
+            Messages.sortingOptions();
+            Scanner userInput = new Scanner(System.in);
+            int sortType = userInput.nextInt();
+            switch (sortType) {
+                case 1:
+                    sortTaskByDueDateAscending();
+                    break;
+                case 2:
+                    sortTaskByDueDateDescending();
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+    }
+
+    private void sortTaskByDueDateDescending() {
+        List<Task> sortedTaskListByDateDescending = tasklist.stream().sorted(Comparator.comparing(Task::getDueDate).reversed()).collect(Collectors.toList());
+        displayTask(sortedTaskListByDateDescending);
+    }
+
+    private void sortTaskByDueDateAscending() {
+        List<Task> sortedTaskListByDateAscending = tasklist.stream().sorted(Comparator.comparing(Task::getDueDate)).collect(Collectors.toList());
+        displayTask(sortedTaskListByDateAscending);
     }
 
     public void sortTaskByProject() {
