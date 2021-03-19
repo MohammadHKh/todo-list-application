@@ -32,7 +32,7 @@ public class ValidationTest {
     @Test
     public void validateTaskListSizeShouldNotThrowExceptionWithNonEmptyList()  {
         List<Task> taskArrayList = new ArrayList<>();
-        taskArrayList.add(new Task("Test", "Test2", "DONE", new Date()));
+        taskArrayList.add(new Task("Test", "Test2",  new Date()));
         assertDoesNotThrow(
                 () -> Validation.validateListSize(taskArrayList)
         );
@@ -56,9 +56,9 @@ public class ValidationTest {
     @Test
     public void validateTaskListIndexShouldNotThrowExceptionWithIndexInRangeOfListSize() {
         List<Task> taskArrayList = new ArrayList<>();
-        taskArrayList.add(new Task("Test0", "Test2", "DONE", new Date()));
-        taskArrayList.add(new Task("Test1", "Test2", "DONE", new Date()));
-        taskArrayList.add(new Task("Test2", "Test2", "DONE", new Date()));
+        taskArrayList.add(new Task("Test0", "Test2",  new Date()));
+        taskArrayList.add(new Task("Test1", "Test2",  new Date()));
+        taskArrayList.add(new Task("Test2", "Test2",  new Date()));
         assertDoesNotThrow(
                 () -> Validation.validateTaskListIndex(taskArrayList, 2)
         );
