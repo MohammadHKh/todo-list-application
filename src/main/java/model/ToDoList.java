@@ -284,6 +284,7 @@ public class ToDoList extends UserCommand {
             System.out.println("There Is No File");
             e.printStackTrace();
         }
+        System.out.println("File Successfully loaded");
         return taskList;
     }
 
