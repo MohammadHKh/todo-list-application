@@ -34,9 +34,9 @@ class ToDoListTest {
         expectedArrayList.add(new Task("Test2", "Test2", "DONE", new Date(2020 - 10 - 10)));
 
         UserCommand toDoList = new ToDoList();
-        toDoList.tasklist.add(new Task("Test0", "Test2", "DONE", new Date(2020 - 10 - 10)));
-        toDoList.tasklist.add(new Task("Test1", "Test2", "DONE", new Date(2020 - 10 - 10)));
-        toDoList.tasklist.add(new Task("Test2", "Test2", "DONE", new Date(2020 - 10 - 10)));
+        toDoList.taskList.add(new Task("Test0", "Test2", "DONE", new Date(2020 - 10 - 10)));
+        toDoList.taskList.add(new Task("Test1", "Test2", "DONE", new Date(2020 - 10 - 10)));
+        toDoList.taskList.add(new Task("Test2", "Test2", "DONE", new Date(2020 - 10 - 10)));
 
         toDoList.saveToFileAsObject();
         ArrayList<Task> actualTaskList = toDoList.readFromFileAsObject();
